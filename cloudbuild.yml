@@ -1,3 +1,12 @@
 steps:
-  - name: 'ubuntu'
-    args: ['echo','Hello Security Gurus!! This is our first build run in Google Cloud Platform']
+  #Execute SonarCloud Scan
+  - name: maven:3.6.3-jdk-11
+
+    entrypoint: mvn
+    args: ['verify', 'sonar:sonar','-Dsonar.host.url=https://sonarcloud.io','-Dsonar.organization=myapp-backend','-Dsonar.projectKey=myappbackendprojectkey','-Dsonar.login=ca057b5d1b83fa784fa6187b3b4ea3e52869622d']
+
+
+
+    
+
+    
