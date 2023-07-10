@@ -1,5 +1,5 @@
 steps:
   #Execute SonarCloud Scan
-  - name: maven:3.6.3-openjdk-11
+  - name: FROM maven:3.8.4-openjdk-17
     entrypoint: mvn
     args: ['verify', 'sonar:sonar','-Dsonar.host.url=https://sonarcloud.io','-Dsonar.organization=myapp-backend','-Dsonar.projectKey=myappbackendprojectkey','-Dsonar.login=ca057b5d1b83fa784fa6187b3b4ea3e52869622d']
