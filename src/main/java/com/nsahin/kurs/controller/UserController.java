@@ -1,55 +1,58 @@
 package com.nsahin.kurs.controller;
-
 import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-import com.nsahin.kurs.repository.UserRepository;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import com.nsahin.kurs.service.UserService;
 import com.nsahin.kurs.model.User;
-import com.nsahin.kurs.exception.NotFoundException;
+import lombok.AllArgsConstructor;
+import org.springframework.web.bind.annotation.*; 
+
 
 @CrossOrigin(origins = "*")
 @RestController
+@AllArgsConstructor
 @RequestMapping("/api")
 public class UserController {
 
-    @Autowired
-    private UserRepository userRepository;
-    //private UserService userService;
-    
-	@GetMapping("/")
-	public String index() {
-		System.out.print("deneme");
-		return "Greetings from Spring Boot!";
-	}
+    private UserService userService;
 
-	@PostMapping("/users")
-    public User addUser(@RequestBody User user) {
-        return userRepository.save(user);
+    // build create User REST API
+    @PostMapping("/users")
+    public ResponseEntity<User> createUser(@RequestBody User user){
+        User savedUser = userService.createUser(user);
+        return new ResponseEntity<>(savedUser, HttpStatus.CREATED);
     }
 
-    @DeleteMapping("/users/{id}")
-    public void deleteUser(@PathVariable Long id) {
-        userRepository.deleteById(id);
-    }
-
-    @PutMapping("/users/{id}")
-    public User updateUser(@PathVariable Long id, @RequestBody User updatedUser) {
-        User user = userRepository.findById(id).orElseThrow(() -> new NotFoundException("User not found"));
-        user.setUsername(updatedUser.getUsername());
-        user.setEmail(updatedUser.getEmail());
-        // Diğer alanları da güncelleme
-        return userRepository.save(user);
-    }
-
+    // build get user by id REST API
+    // http://localhost:8080/api/users/1
     @GetMapping("/users/{id}")
-    public User getUser(@PathVariable Long id) {
-        return userRepository.findById(id).orElseThrow(() -> new NotFoundException("User not found"));
-    }
-    @GetMapping("/users")
-    public List<User> getAllUsers() {
-        return userRepository.findAll();
+    public ResponseEntity<User> getUserById(@PathVariable("id") Long userId){
+        User user = userService.getUserById(userId);
+        return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
-    // Diğer işlemler...
+    // Build Get All Users REST API
+    // http://localhost:8080/api/users
+    @GetMapping("/users")
+    public ResponseEntity<List<User>> getAllUsers(){
+        List<User> users = userService.getAllUsers();
+        return new ResponseEntity<>(users, HttpStatus.OK);
+    }
+
+    // Build Update User REST API
+    @PutMapping("/users/{id}")
+    // http://localhost:8080/api/users/1
+    public ResponseEntity<User> updateUser(@PathVariable("id") Long userId,
+                                           @RequestBody User user){
+        user.setId(userId);
+        User updatedUser = userService.updateUser(user);
+        return new ResponseEntity<>(updatedUser, HttpStatus.OK);
+    }
+
+    // Build Delete User REST API
+    @DeleteMapping("/users/{id}")
+    public ResponseEntity<String> deleteUser(@PathVariable("id") Long userId){
+        userService.deleteUser(userId);
+        return new ResponseEntity<>("User successfully deleted!", HttpStatus.OK);
+    }
 }

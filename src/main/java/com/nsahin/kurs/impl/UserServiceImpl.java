@@ -1,52 +1,48 @@
 package com.nsahin.kurs.impl;
 
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import com.nsahin.kurs.model.*;
-import com.nsahin.kurs.repository.*;
+import com.nsahin.kurs.model.User;
+import com.nsahin.kurs.repository.UserRepository;
 import com.nsahin.kurs.service.UserService;
 
+import lombok.AllArgsConstructor;
+
+import org.springframework.stereotype.Service;
+import java.util.List;
+import java.util.Optional;
+
 @Service
+@AllArgsConstructor
 public class UserServiceImpl implements UserService {
-	 
-	@Autowired
+
     private UserRepository userRepository;
 
-   
-    public UserServiceImpl(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    @Override
+    public User createUser(User user) {
+        return userRepository.save(user);
     }
 
-    // Diğer metotlar...
+    @Override
+    public User getUserById(Long userId) {
+        Optional<User> optionalUser = userRepository.findById(userId);
+        return optionalUser.get();
+    }
 
     @Override
     public List<User> getAllUsers() {
         return userRepository.findAll();
     }
 
-	@Override
-	public User addUser(User user) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    @Override
+    public User updateUser(User user) {
+        User existingUser = userRepository.findById(user.getId()).get();
+        existingUser.setUsername(user.getUsername());
+        existingUser.setEmail(user.getEmail());
+        User updatedUser = userRepository.save(existingUser);
+        return updatedUser;
+    }
 
-	@Override
-	public void deleteUser(Long userId) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public User updateUser(User user) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public User getUser(Long userId) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    @Override
+    public void deleteUser(Long userId) {
+        userRepository.deleteById(userId);
+    }
 }

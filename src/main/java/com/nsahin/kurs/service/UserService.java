@@ -3,11 +3,13 @@ import com.nsahin.kurs.model.User;
 import java.util.List;
 
 public interface UserService {
-    User addUser(User user);
-    void deleteUser(Long userId);
-    User updateUser(User user);
-    User getUser(Long userId);
+    User createUser(User user);
+
+    User getUserById(Long userId);
+
     List<User> getAllUsers();
-    
-    
+
+    User updateUser(User user);
+
+    void deleteUser(Long userId);
 }
