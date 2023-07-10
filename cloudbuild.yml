@@ -1,5 +1,29 @@
-steps:
+#steps:
   #Execute SonarCloud Scan
-  - name: maven:3.8.4-openjdk-17
-    entrypoint: mvn
-    args: ['verify', 'sonar:sonar','-Dsonar.host.url=https://sonarcloud.io','-Dsonar.organization=myapp-backend','-Dsonar.projectKey=myappbackendprojectkey','-Dsonar.login=ca057b5d1b83fa784fa6187b3b4ea3e52869622d']
+#  - name: maven:3.8.4-openjdk-17
+#    entrypoint: mvn
+#    args: ['verify', 'sonar:sonar','-Dsonar.host.url=https://sonarcloud.io','-Dsonar.organization=myapp-backend','-Dsonar.projectKey=myappbackendprojectkey','-Dsonar.login=ca057b5d1b83fa784fa6187b3b4ea3e52869622d']
+
+
+
+steps:   
+#Run DAST scan using OWASP ZAP in GCP DevSecOps Pipeline
+  - name: 'ubuntu'
+    entrypoint: bash
+    args: 
+      - '-c'
+      - |-
+        apt-get update
+        apt-get -y install wget
+        apt-get -y install default-jdk
+        wget https://github.com/zaproxy/zaproxy/releases/download/v2.11.1/ZAP_2.11.1_Linux.tar.gz
+        mkdir zap
+        tar -xvf ZAP_2.11.1_Linux.tar.gz
+        cd ZAP_2.11.1
+        ./zap.sh -cmd -quickurl https://www.kurs.nsahin.com:8080 -quickprogress -quickout ../zap_report.html 
+    id: DAST Scan using OWASP ZAP
+artifacts:
+  objects:
+    location: 'gs://myapp_kurs'
+    paths:
+      - zap_report.html    
