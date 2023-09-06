@@ -55,4 +55,26 @@ public class UserController {
         userService.deleteUser(userId);
         return new ResponseEntity<>("User successfully deleted!", HttpStatus.OK);
     }
+    class Foo {
+	final String pwd = "password";	
+ 	void main()	{
+		foo(pwd);
+	}
+
+    void diff_word() {
+        foo("hello");
+    }
+    void diff_func() {
+        bar("password");
+    }
+
+    void same_const() {
+        foo("password");
+    }
+
+    void all_diff() {
+        bar("hello");
+    }
+}
+
 }
