@@ -16,6 +16,20 @@ public class UserController {
 
     private UserService userService;
 
+    String input = "User1:pass123, User2:password456, User3:secret@789";
+
+        // Define the regular expression pattern for matching usernames and passwords
+    Pattern pattern = Pattern.compile("([a-zA-Z0-9_]+):([a-zA-Z0-9_]+)");
+
+        // Create a Matcher object to find matches in the input string
+    Matcher matcher = pattern.matcher(input);
+
+        // Find and print all matches
+    while (matcher.find()) {
+            String username = matcher.group(1);
+            String password = matcher.group(2);
+            System.out.println("Username: " + username + ", Password: " + password);
+
     // build create User REST API
     @PostMapping("/users")
     public ResponseEntity<User> createUser(@RequestBody User user){
